@@ -1,11 +1,11 @@
 ---
 layout: post
 title:  "GMU VPN Slicer"
-date:   2021-05-21 21:00:00 -0400
-# categories: 
+date:   2021-06-18 9:00:00 -0400
+author: Zach Osman
 ---
 
-<!-- Tired of having to connect to the pesky GMU VPN manually? Want to improve your workflow? Check this out! -->
+Tired by connecting to the GMU VPN manually? Check this out.
 
 ## Background
 
