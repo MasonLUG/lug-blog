@@ -1,0 +1,116 @@
+---
+layout: post
+title:  "GMU VPN Connection"
+date:   2021-05-14 21:00:00 -0400
+# categories:
+---
+
+## Dependencies
+<!-- --protocol=anyconnect -->
+
+* [OpenConnect](http://www.infradead.org/openconnect/)
+
+Openconnect can likely be installed by your distributions package manager.
+
+Debian Based:
+`sudo apt install openconnect`
+
+Arch Based:
+`sudo pacman -S openconnect`
+
+## First use
+
+`openconnect vpn.gmu.edu`
+
+![Figure 1](/lug-blog/assets/2021-05-14-gmu-vpn/fig1.png)
+
+![Figure 2](/lug-blog/assets/2021-05-14-gmu-vpn/fig2.png)
+
+## More Advanced Config
+
+We can also configure this to not require input from us, as well as configure it to be a SystemD service.
+
+
+### Easier Startup
+
+First lets create a directory for this.
+
+`mkdir gmu-vpn`
+
+and
+
+`cd gmu-vpn`
+
+Lets put this file inside, this will fill in all of the prompts given during the `openconnect` connecting process automatically, and require less intervention from us. 
+
+(Be sure to fill in VPN_USER with your masonlive ID)
+
+`vpn.sh`: 
+```
+#!/bin/sh
+
+SERVER=vpn.gmu.edu
+VPN_USER=
+TYPE=STUDENT
+PASS_FILE=./.pass_file
+
+cat "$PASS_FILE" | openconnect "$SERVER" -u "$VPN_USER" -g "$TYPE" --passwd-on-stdin -v
+```
+
+We'll also need to mark that file as executable so,
+
+`chmod +x ./vpn.sh`
+
+Lastly, we'll need to create a password file, this will store your GMU password, so it's critical that we secure this file. 
+
+`.pass_file`:
+```
+your-vpn-password-here
+```
+
+And we'll want to set that files permissions correctly so other users on your machine can't read it.
+
+`chmod 600 ./.pass_file`
+
+And we're done!
+
+From here you can simply run `./vpn.sh` from inside the `gmu-vpn` directory and be connected.
+
+
+### SunnyD
+
+But what if you want the bold refreshing taste of SystemD?
+
+Well...
+
+
+If we create the following file and place it in `/etc/systemd/system`, we'll never have to connect to the vpn manually again!
+
+`gmu-vpn.service`: 
+```
+[Unit]
+Description=GMU VPN
+After=network.target
+
+[Service]
+User=root
+ExecStart=/bin/bash ./vpn.sh
+WorkingDirectory=/home/USER/PATH/TO/gmu-vpn
+Type=exec
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+
+Next we load, enable, and start the service file with the following
+
+`sudo systemctl daemon-reload`
+
+`sudo systemctl enable gmu-vpn`
+
+`sudo systemctl start gmu-vpn`
+
+
+And we're done!

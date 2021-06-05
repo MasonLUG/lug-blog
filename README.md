@@ -1,1 +1,1 @@
-# Lug Blog
+# MasonLUG Blog
