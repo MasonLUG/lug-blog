@@ -49,7 +49,7 @@ Lets put this file inside, this will fill in all of the prompts given during the
 
 `vpn.sh`: 
 ```
-#!/bin/sh
+#!/bin/bash
 
 SERVER=vpn.gmu.edu
 VPN_USER=
@@ -72,7 +72,7 @@ your-vpn-password-here
 
 And we'll want to set that files permissions correctly so other users on your machine can't read it.
 
-`chmod 600 ./.pass_file`
+`chmod 600 .pass_file`
 
 And we're done!
 
@@ -96,7 +96,7 @@ After=network.target
 
 [Service]
 User=root
-ExecStart=/bin/bash ./vpn.sh
+ExecStart=/bin/bash vpn.sh
 WorkingDirectory=/home/USER/PATH/TO/gmu-vpn
 Type=exec
 Restart=always
@@ -106,13 +106,14 @@ WantedBy=multi-user.target
 ```
 
 
-Next we load, enable, and start the service file with the following
-
-`sudo systemctl daemon-reload`
-
-`sudo systemctl enable gmu-vpn`
-
-`sudo systemctl start gmu-vpn`
+Next we load, enable, and start the service file with the following:
 
 
-And we're done!
+Rescan all the unit files: `sudo systemctl daemon-reload`
+
+Has the new service start on boot: `sudo systemctl enable gmu-vpn`
+
+Starts the new service: `sudo systemctl start gmu-vpn`
+
+
+That should be it, feel free to ask on our discord if you get stuck or have any questions!
