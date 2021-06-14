@@ -54,7 +54,7 @@ Lets put this file inside, this will fill in all of the prompts given during the
 SERVER=vpn.gmu.edu
 VPN_USER=
 TYPE=STUDENT
-PASS_FILE=./.pass_file
+PASS_FILE=.pass_file
 
 cat "$PASS_FILE" | openconnect "$SERVER" -u "$VPN_USER" -g "$TYPE" --passwd-on-stdin -v
 ```
@@ -97,7 +97,7 @@ After=network.target
 [Service]
 User=root
 ExecStart=/bin/bash vpn.sh
-WorkingDirectory=/home/USER/PATH/TO/gmu-vpn
+WorkingDirectory=/USER/PATH/TO/gmu-vpn
 Type=exec
 Restart=always
 
