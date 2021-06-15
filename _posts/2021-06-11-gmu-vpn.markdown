@@ -48,7 +48,7 @@ Lets put this file inside, this will fill in all of the prompts given during the
 (Be sure to fill in VPN_USER with your masonlive ID)
 
 `vpn.sh`: 
-```
+```bash
 #!/bin/bash
 
 SERVER=vpn.gmu.edu
@@ -89,7 +89,7 @@ Well...
 If we create the following file and place it in `/etc/systemd/system`, we'll never have to connect to the vpn manually again!
 
 `gmu-vpn.service`: 
-```
+```ini
 [Unit]
 Description=GMU VPN
 After=network.target
