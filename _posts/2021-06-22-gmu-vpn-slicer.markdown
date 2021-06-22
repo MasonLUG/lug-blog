@@ -1,11 +1,11 @@
 ---
 layout: post
 title:  "GMU VPN Slicer"
-date:   2021-06-18 9:00:00 -0400
+date:   2021-06-22 9:00:00 -0400
 author: Zach Osman
 ---
 
-Tired by connecting to the GMU VPN manually? Check this out.
+Annoyed by being constantly on the GMU VPN? Try a Slicer!
 
 ## Background
 
@@ -14,6 +14,8 @@ A common problem I found was that I'd want to access GMU resources (namely `zeus
 The solution that worked early in my time at GMU was to ssh jump into `zeus` from `mason.gmu.edu` (another student accessable linux machine), as `mason` was accessable from outside the VPN, whereas `zues` was not. 
 
 Somewhat recently `mason` followed `zues` and changed to no longer be publically accessable, and must be accessed from inside the GMU network, breaking the initial fix. 
+
+As for how I use this personally, this runs 24/7 on my RaspberryPI, and I've setup my ssh config to sshjump through my RaspberryPI to ping any of the vse servers, meaning any of my computer on my network can ssh jump into VSE through my RaspberryPI. This has saved me quite a lot of time and pain over the years.
 
 ## Current Solution
 
@@ -27,7 +29,8 @@ For the implementation below, we will route the following domains through the VP
 
 This can be done multiple ways, below is how I did it.
 
-This is very similar to 
+
+**This will be similar to the GMU VPN implementation published last week, with the slight modification of slicing the VPN**
 
 #### Dependencies
 <!-- --protocol=anyconnect -->
@@ -73,14 +76,14 @@ We put the below file inside, as this will fill in the prompts given to us durin
 (Be sure to fill in VPN_USER with your masonlive ID)
 
 `vpn-slicer.sh`:
-```
+```bash
 #!/bin/sh
 
 SERVER=vpn.gmu.edu
 SLICE_SERVERS='zeus-1.vse.gmu.edu zeus-2.vse.gmu.edu zeus.vse.gmu.edu mason.gmu.edu'
 VPN_USER=
 TYPE=STUDENT
-PASS_FILE=./.pass_file
+PASS_FILE=.pass_file
 
 cat "$PASS_FILE" | openconnect "$SERVER" -u "$VPN_USER" -s "vpn-slice $SLICE_SERVERS" -g "$TYPE" --passwd-on-stdin -v
 ```
@@ -115,7 +118,7 @@ We can create a SystemD service to have this start and run automatically, lets d
 We can create the following file and place it in `/etc/systemd/system`, and we won't have to start this manually.
 
 `vpn-slicer.service`: 
-```
+```ini
 [Unit]
 Description=GMU VPN
 After=network.target
@@ -135,9 +138,7 @@ Next we load, enable, and start the service file with the following
 
 `sudo systemctl daemon-reload`
 
-`sudo systemctl enable vpn-slicer`
-
-`sudo systemctl start vpn-slicer`
+`sudo systemctl enable --now vpn-slicer`
 
 
 And we're done!
