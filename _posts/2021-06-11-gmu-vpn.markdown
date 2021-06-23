@@ -24,9 +24,9 @@ Arch Based:
 
 `openconnect vpn.gmu.edu`
 
-![Figure 1](/lug-blog/assets/2021-05-14-gmu-vpn/fig1.png)
+![Figure 1]({{site.baseurl}}/assets/2021-05-14-gmu-vpn/fig1.png)
 
-![Figure 2](/lug-blog/assets/2021-05-14-gmu-vpn/fig2.png)
+![Figure 2]({{site.baseurl}}/assets/2021-05-14-gmu-vpn/fig2.png)
 
 ## More Advanced Config
 

@@ -47,13 +47,13 @@ Check the README for the install guide.
 Results:
 
 Before VPN Connection:
-![Figure 1](/lug-blog/assets/2021-05-21-gmu-vpn-slicer/fig1.png)
+![Figure 1]({{site.baseurl}}/assets/2021-05-21-gmu-vpn-slicer/fig1.png)
 
 VPN Connection:
-![Figure 2](/lug-blog/assets/2021-05-21-gmu-vpn-slicer/fig2.png)
+![Figure 2]({{site.baseurl}}/assets/2021-05-21-gmu-vpn-slicer/fig2.png)
 
 After VPN Connection:
-![Figure 3](/lug-blog/assets/2021-05-21-gmu-vpn-slicer/fig3.png)
+![Figure 3]({{site.baseurl}}/assets/2021-05-21-gmu-vpn-slicer/fig3.png)
 
 We can see that this last connection can connect to `zeus.vse.gmu.edu` but _cannot_ connect to `mason.gmu.edu`, as we didn't specify that address in the sliced domain list for the VPN. This is the expected behaviour.
 
