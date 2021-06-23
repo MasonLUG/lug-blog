@@ -1,0 +1,94 @@
+---
+layout: post
+title:  "SSH Setup"
+date:   2020-07-02 09:00:00 -0400
+author: Zach Osman
+---
+Learn how to setup ssh keys!
+
+#### Man Page Description
+ssh (SSH client) is a program for logging into a remote machine and for executing commands on a remote machine.  It is intended
+to provide secure encrypted communications between two untrusted hosts over an insecure network.  X11 connections, arbitrary TCP
+ports and UNIX-domain sockets can also be forwarded over the secure channel.
+
+
+## Intro
+SSH, or Secure Shell Protocol is a program for logging into a remote machine and executing commands on that remote machine. SSH typically operates over network port `22` but can be changed depending on the remote machine's configuration.
+
+
+### Usage
+
+TL;DR- Simple usage:
+```bash
+ssh user@hostname
+```
+
+
+### Example
+In this example, I'll walk through setting up an ssh config for a remote machine already running an ssh server, in this example, a RaspberryPI 
+
+Here, we're running ssh with user as pi, and hostname being the IP address of the machine.
+![Figure 1]({{site.baseurl}}/assets/2021-07-02-ssh/fig1.png)
+
+There are a few problems with this though, one being you have to remember your password and enter it every time you login. The other being that you also have to remember the IP address of the machine to login, lets improve this.
+
+
+### SSH Config
+
+If the folder `~/.ssh` doesn't exist, create it.
+
+After that, we add this to `~/.ssh/config`
+
+
+
+```bash
+Host foo 
+       HostName x.x.x.x 
+       User pi
+```
+
+**NOTE**: You'll want to replace `Host` with a nickname for the server, `HostName` with the machines IP address, and `User` with the user for the remote machine (in my case, `pi`).
+
+At this point you'll be able to login only using the following command and entering your password.
+
+```bash
+ssh foo
+```
+
+
+### SSH Keys
+
+
+```bash
+ssh-keygen -t ed25519 -f ~/.ssh/foo -C "Nickname for your local machine"
+```
+
+**NOTE**: You'll want to replace `foo` with the same name you chose in the `Host` line in your ssh config.
+
+When prompted for an ssh password I recommend to leave it blank. To put as password is more secure, however this requires you to enter this password every time you use the key, which is why it's rare to see keys with passwords. 
+
+
+Now lets update the ssh config to include this key.
+
+```bash
+Host foo
+       HostName x.x.x.x
+       User pi
+       IdentityFile ~/.ssh/foo
+```
+
+**NOTE (again)**: You'll want to replace `Host` with a nickname for the server, `HostName` with the machines IP address, and `User` with the user for the remote machine (in my case, `pi`).
+
+
+### Usage with full config
+
+Now will the full configuration, we will be able to just run the following command, and automatically login.
+
+```bash
+ssh foo
+```
+
+
+
+##### Sources:
+[https://www.openssh.com/manual.html](https://www.openssh.com/manual.html)
