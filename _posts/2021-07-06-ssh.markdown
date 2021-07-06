@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "SSH Setup"
-date:   2021-07-02 09:00:00 -0400
+date:   2021-07-06 09:00:00 -0400
 author: Zach Osman
 ---
 Learn how to setup ssh keys!
@@ -65,8 +65,30 @@ ssh-keygen -t ed25519 -f ~/.ssh/foo -C "Nickname for your local machine"
 
 **NOTE**: You'll want to replace `foo` with the same name you chose in the `Host` line in your ssh config.
 
-When prompted for an ssh password I recommend to leave it blank. To put as password is more secure, however this requires you to enter this password every time you use the key, which is why it's rare to see keys with passwords. 
+When prompted for an ssh password I recommend to leave it blank. To put as password is more secure, however this requires you to enter this password every time you use the key, which is why it's rare to see keys with passwords. Some workplaces enforce that you create a password for your private key. While it's possible to brute force the password for these keys, if your key is compromised, having a password will buy you some time while the attacker attemps to brute force the password. 
 
+We give the key a nickname for the local machine so that it's easier to revoke the key for an old/compromised machine.
+
+
+
+
+**Setup on remote machine**
+
+**NOTE** `ssh-copy-id` can do some of this automatically, for more `man ssh-copy-id`
+
+
+Next up we have to add the public part of our key to the host machines `authorized_keys`
+
+
+```bash
+ssh-copy-id -i ~/.ssh/foo.pub user@hostname
+```
+
+**OR**
+
+```bash
+cat ~/.ssh/foo.pub | ssh user@hostname "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+```
 
 Now lets update the ssh config to include this key.
 
@@ -77,7 +99,10 @@ Host foo
        IdentityFile ~/.ssh/foo
 ```
 
-**NOTE (again)**: You'll want to replace `Host` with a nickname for the server, `HostName` with the machines IP address, and `User` with the user for the remote machine (in my case, `pi`).
+**NOTE**: You'll want to replace `Host` with a nickname for the server, `HostName` with the machines IP address, and `User` with the user for the remote machine (in my case, `pi`).
+
+
+
 
 
 ### Usage with full config
