@@ -81,13 +81,13 @@ Next up we have to add the public part of our key to the host machines `authoriz
 
 
 ```bash
-ssh-copy-id -i ~/.ssh/foo.pub user@hostname
+ssh-copy-id -i ~/.ssh/foo.pub foo
 ```
 
 **OR**
 
 ```bash
-cat ~/.ssh/foo.pub | ssh user@hostname "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+cat ~/.ssh/foo.pub | ssh foo "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
 ```
 
 Now lets update the ssh config to include this key.
