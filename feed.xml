@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="masonlug.github.io/lug-blog/feed.xml" rel="self" type="application/atom+xml" /><link href="masonlug.github.io/lug-blog/" rel="alternate" type="text/html" /><updated>2021-09-05T09:10:14+00:00</updated><id>masonlug.github.io/lug-blog/feed.xml</id><title type="html">GMU Linux Users Group</title><subtitle>The Official Blog of the George Mason University Linux Users Group https://discord.gg/VEgGfVsTjR</subtitle><entry><title type="html">SSH Setup</title><link href="masonlug.github.io/lug-blog/2021/07/06/ssh.html" rel="alternate" type="text/html" title="SSH Setup" /><published>2021-07-06T13:00:00+00:00</published><updated>2021-07-06T13:00:00+00:00</updated><id>masonlug.github.io/lug-blog/2021/07/06/ssh</id><content type="html" xml:base="masonlug.github.io/lug-blog/2021/07/06/ssh.html">&lt;p&gt;Learn how to setup ssh keys!&lt;/p&gt;
+
+&lt;h4 id=&quot;man-page-description&quot;&gt;Man Page Description&lt;/h4&gt;
+&lt;p&gt;ssh (SSH client) is a program for logging into a remote machine and for executing commands on a remote machine.  It is intended
+to provide secure encrypted communications between two untrusted hosts over an insecure network.  X11 connections, arbitrary TCP
+ports and UNIX-domain sockets can also be forwarded over the secure channel.&lt;/p&gt;
+
+&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+&lt;p&gt;SSH, or Secure Shell Protocol is a program for logging into a remote machine and executing commands on that remote machine. SSH typically operates over network port &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;22&lt;/code&gt; but can be changed depending on the remote machine’s configuration.&lt;/p&gt;
+
+&lt;h3 id=&quot;usage&quot;&gt;Usage&lt;/h3&gt;
+
+&lt;p&gt;TL;DR- Simple usage:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh user@hostname
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;example&quot;&gt;Example&lt;/h3&gt;
+&lt;p&gt;In this example, I’ll walk through setting up an ssh config for a remote machine already running an ssh server, in this example, a RaspberryPI&lt;/p&gt;
+
+&lt;p&gt;Here, we’re running ssh with user as pi, and hostname being the IP address of the machine.
+&lt;img src=&quot;/lug-blog/assets/2021-07-02-ssh/fig1.png&quot; alt=&quot;Figure 1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;There are a few problems with this though, one being you have to remember your password and enter it every time you login. The other being that you also have to remember the IP address of the machine to login, lets improve this.&lt;/p&gt;
+
+&lt;h3 id=&quot;ssh-config&quot;&gt;SSH Config&lt;/h3&gt;
+
+&lt;p&gt;If the folder &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.ssh&lt;/code&gt; doesn’t exist, create it.&lt;/p&gt;
+
+&lt;p&gt;After that, we add this to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.ssh/config&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Host foo 
+       HostName x.x.x.x 
+       User pi
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: You’ll want to replace &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Host&lt;/code&gt; with a nickname for the server, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HostName&lt;/code&gt; with the machines IP address, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;User&lt;/code&gt; with the user for the remote machine (in my case, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pi&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;At this point you’ll be able to login only using the following command and entering your password.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh foo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;ssh-keys&quot;&gt;SSH Keys&lt;/h3&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh-keygen &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; ed25519 &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; ~/.ssh/foo &lt;span class=&quot;nt&quot;&gt;-C&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Nickname for your local machine&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: You’ll want to replace &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;foo&lt;/code&gt; with the same name you chose in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Host&lt;/code&gt; line in your ssh config.&lt;/p&gt;
+
+&lt;p&gt;When prompted for an ssh password I recommend to leave it blank. To put as password is more secure, however this requires you to enter this password every time you use the key, which is why it’s rare to see keys with passwords. Some workplaces enforce that you create a password for your private key. While it’s possible to brute force the password for these keys, if your key is compromised, having a password will buy you some time while the attacker attemps to brute force the password.&lt;/p&gt;
+
+&lt;p&gt;We give the key a nickname for the local machine so that it’s easier to revoke the key for an old/compromised machine.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Setup on remote machine&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-copy-id&lt;/code&gt; can do some of this automatically, for more &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;man ssh-copy-id&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Next up we have to add the public part of our key to the host machines &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;authorized_keys&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh-copy-id &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; ~/.ssh/foo.pub foo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;OR&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; ~/.ssh/foo.pub | ssh foo &lt;span class=&quot;s2&quot;&gt;&quot;mkdir -p ~/.ssh &amp;amp;&amp;amp; cat &amp;gt;&amp;gt; ~/.ssh/authorized_keys&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now lets update the ssh config to include this key.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Host foo
+       HostName x.x.x.x
+       User pi
+       IdentityFile ~/.ssh/foo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: You’ll want to replace &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Host&lt;/code&gt; with a nickname for the server, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HostName&lt;/code&gt; with the machines IP address, and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;User&lt;/code&gt; with the user for the remote machine (in my case, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pi&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h3 id=&quot;usage-with-full-config&quot;&gt;Usage with full config&lt;/h3&gt;
+
+&lt;p&gt;Now will the full configuration, we will be able to just run the following command, and automatically login.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh foo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;sources&quot;&gt;Sources:&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.openssh.com/manual.html&quot;&gt;https://www.openssh.com/manual.html&lt;/a&gt;&lt;/p&gt;</content><author><name>Zach Osman</name></author><summary type="html">Learn how to setup ssh keys!</summary></entry><entry><title type="html">GMU VPN Slicer</title><link href="masonlug.github.io/lug-blog/2021/06/22/gmu-vpn-slicer.html" rel="alternate" type="text/html" title="GMU VPN Slicer" /><published>2021-06-22T13:00:00+00:00</published><updated>2021-06-22T13:00:00+00:00</updated><id>masonlug.github.io/lug-blog/2021/06/22/gmu-vpn-slicer</id><content type="html" xml:base="masonlug.github.io/lug-blog/2021/06/22/gmu-vpn-slicer.html">&lt;p&gt;Annoyed by being constantly on the GMU VPN? Try a Slicer!&lt;/p&gt;
+
+&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
+
+&lt;p&gt;A common problem I found was that I’d want to access GMU resources (namely &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;zeus.vse.gmu.edu&lt;/code&gt;) while not having my internet be slowed down by being connected to the GMU VPN.&lt;/p&gt;
+
+&lt;p&gt;The solution that worked early in my time at GMU was to ssh jump into &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;zeus&lt;/code&gt; from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mason.gmu.edu&lt;/code&gt; (another student accessable linux machine), as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mason&lt;/code&gt; was accessable from outside the VPN, whereas &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;zues&lt;/code&gt; was not.&lt;/p&gt;
+
+&lt;p&gt;Somewhat recently &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mason&lt;/code&gt; followed &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;zues&lt;/code&gt; and changed to no longer be publically accessable, and must be accessed from inside the GMU network, breaking the initial fix.&lt;/p&gt;
+
+&lt;p&gt;As for how I use this personally, this runs 24/7 on my RaspberryPI, and I’ve setup my ssh config to sshjump through my RaspberryPI to ping any of the vse servers, meaning any of my computer on my network can ssh jump into VSE through my RaspberryPI. This has saved me quite a lot of time and pain over the years.&lt;/p&gt;
+
+&lt;h2 id=&quot;current-solution&quot;&gt;Current Solution&lt;/h2&gt;
+
+&lt;p&gt;The VPN Slicer allows for traffic directed at specific domains to be routed through the VPN, whilst leaving the remaining traffic untouched.&lt;/p&gt;
+
+&lt;p&gt;For the implementation below, we will route the following domains through the VPN- &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;zeus-1.vse.gmu.edu zeus-2.vse.gmu.edu zeus.vse.gmu.edu mason.gmu.edu&lt;/code&gt;, however you can add to this list as you see fit.&lt;/p&gt;
+
+&lt;h2 id=&quot;implementation&quot;&gt;Implementation&lt;/h2&gt;
+
+&lt;p&gt;This can be done multiple ways, below is how I did it.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;This will be similar to the GMU VPN implementation published last week, with the slight modification of slicing the VPN&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;dependencies&quot;&gt;Dependencies&lt;/h4&gt;
+&lt;!-- --protocol=anyconnect --&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.infradead.org/openconnect/&quot;&gt;OpenConnect&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Openconnect can likely be installed by your distribution package manager.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/dlenski/vpn-slice&quot;&gt;Vpn-Slice&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Check the README for the install guide.&lt;/p&gt;
+
+&lt;h4 id=&quot;first-use&quot;&gt;First use&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;openconnect vpn.gmu.edu -s &quot;vpn-slice zeus.vse.gmu.edu&quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Results:&lt;/p&gt;
+
+&lt;p&gt;Before VPN Connection:
+&lt;img src=&quot;/lug-blog/assets/2021-05-21-gmu-vpn-slicer/fig1.png&quot; alt=&quot;Figure 1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;VPN Connection:
+&lt;img src=&quot;/lug-blog/assets/2021-05-21-gmu-vpn-slicer/fig2.png&quot; alt=&quot;Figure 2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;After VPN Connection:
+&lt;img src=&quot;/lug-blog/assets/2021-05-21-gmu-vpn-slicer/fig3.png&quot; alt=&quot;Figure 3&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We can see that this last connection can connect to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;zeus.vse.gmu.edu&lt;/code&gt; but &lt;em&gt;cannot&lt;/em&gt; connect to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mason.gmu.edu&lt;/code&gt;, as we didn’t specify that address in the sliced domain list for the VPN. This is the expected behaviour.&lt;/p&gt;
+
+&lt;h4 id=&quot;easier-startup&quot;&gt;Easier Startup&lt;/h4&gt;
+
+&lt;p&gt;Lets make a directory for this.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mkdir gmu-vpn-slicer&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;and&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cd gmu-vpn-slicer&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;We put the below file inside, as this will fill in the prompts given to us during the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;openconnect&lt;/code&gt; connection process, and will allow us to automate this later.&lt;/p&gt;
+
+&lt;p&gt;(Be sure to fill in VPN_USER with your masonlive ID)&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vpn-slicer.sh&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;SERVER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;vpn.gmu.edu
+&lt;span class=&quot;nv&quot;&gt;SLICE_SERVERS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'zeus-1.vse.gmu.edu zeus-2.vse.gmu.edu zeus.vse.gmu.edu mason.gmu.edu'&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;VPN_USER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;TYPE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;STUDENT
+&lt;span class=&quot;nv&quot;&gt;PASS_FILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;.pass_file
+
+&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PASS_FILE&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; | openconnect &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$SERVER&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$VPN_USER&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;vpn-slice &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$SLICE_SERVERS&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$TYPE&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--passwd-on-stdin&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We need to make this file executable, so:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chmod +x ./vpn-slicer.sh&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Lastly, we’ll need to create a password file, this will store your GMU password, so it’s critical that we secure this file.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.pass_file&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;your-vpn-password-here
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And we’ll want to set that files permissions correctly so other users on your machine can’t read it.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chmod 600 ./.pass_file&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;And we’re done!&lt;/p&gt;
+
+&lt;p&gt;From here you can simply run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;./vpn-slicer.sh&lt;/code&gt; from inside the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gmu-vpn-slicer&lt;/code&gt; directory and be connected.&lt;/p&gt;
+
+&lt;h4 id=&quot;le-sunny-d&quot;&gt;Le Sunny D&lt;/h4&gt;
+
+&lt;p&gt;Welcome to the official home of the most refreshing orange drink in existence.&lt;/p&gt;
+
+&lt;p&gt;We can create a SystemD service to have this start and run automatically, lets do that.&lt;/p&gt;
+
+&lt;p&gt;We can create the following file and place it in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/systemd/system&lt;/code&gt;, and we won’t have to start this manually.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vpn-slicer.service&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nn&quot;&gt;[Unit]&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;Description&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;GMU VPN&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;After&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;network.target&lt;/span&gt;
+
+&lt;span class=&quot;nn&quot;&gt;[Service]&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;root&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;ExecStart&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/bin/bash ./vpn.sh&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;WorkingDirectory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/home/USER/PATH/TO/gmu-vpn-slicer&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;exec&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;Restart&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;always&lt;/span&gt;
+
+&lt;span class=&quot;nn&quot;&gt;[Install]&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;WantedBy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;multi-user.target&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Next we load, enable, and start the service file with the following&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo systemctl daemon-reload&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo systemctl enable --now vpn-slicer&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;And we’re done!&lt;/p&gt;</content><author><name>Zach Osman</name></author><summary type="html">Annoyed by being constantly on the GMU VPN? Try a Slicer!</summary></entry><entry><title type="html">GMU VPN Connection</title><link href="masonlug.github.io/lug-blog/2021/06/11/gmu-vpn.html" rel="alternate" type="text/html" title="GMU VPN Connection" /><published>2021-06-11T13:00:00+00:00</published><updated>2021-06-11T13:00:00+00:00</updated><id>masonlug.github.io/lug-blog/2021/06/11/gmu-vpn</id><content type="html" xml:base="masonlug.github.io/lug-blog/2021/06/11/gmu-vpn.html">&lt;p&gt;Easy GMU VPN Connection walkthrough.&lt;/p&gt;
+
+&lt;h2 id=&quot;dependencies&quot;&gt;Dependencies&lt;/h2&gt;
+&lt;!-- --protocol=anyconnect --&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.infradead.org/openconnect/&quot;&gt;OpenConnect&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Openconnect can likely be installed by your distributions package manager.&lt;/p&gt;
+
+&lt;p&gt;Debian Based:
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo apt install openconnect&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Arch Based:
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo pacman -S openconnect&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;first-use&quot;&gt;First use&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;openconnect vpn.gmu.edu&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/lug-blog/assets/2021-05-14-gmu-vpn/fig1.png&quot; alt=&quot;Figure 1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/lug-blog/assets/2021-05-14-gmu-vpn/fig2.png&quot; alt=&quot;Figure 2&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;more-advanced-config&quot;&gt;More Advanced Config&lt;/h2&gt;
+
+&lt;p&gt;We can also configure this to not require input from us, as well as configure it to be a SystemD service.&lt;/p&gt;
+
+&lt;h3 id=&quot;easier-startup&quot;&gt;Easier Startup&lt;/h3&gt;
+
+&lt;p&gt;First lets create a directory for this.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mkdir gmu-vpn&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;and&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cd gmu-vpn&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Lets put this file inside, this will fill in all of the prompts given during the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;openconnect&lt;/code&gt; connecting process automatically, and require less intervention from us.&lt;/p&gt;
+
+&lt;p&gt;(Be sure to fill in VPN_USER with your masonlive ID)&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vpn.sh&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;SERVER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;vpn.gmu.edu
+&lt;span class=&quot;nv&quot;&gt;VPN_USER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;TYPE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;STUDENT
+&lt;span class=&quot;nv&quot;&gt;PASS_FILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;.pass_file
+
+&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PASS_FILE&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; | openconnect &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$SERVER&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$VPN_USER&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$TYPE&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--passwd-on-stdin&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We’ll also need to mark that file as executable so,&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chmod +x ./vpn.sh&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Lastly, we’ll need to create a password file, this will store your GMU password, so it’s critical that we secure this file.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.pass_file&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;your-vpn-password-here
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And we’ll want to set that files permissions correctly so other users on your machine can’t read it.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chmod 600 .pass_file&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;And we’re done!&lt;/p&gt;
+
+&lt;p&gt;From here you can simply run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;./vpn.sh&lt;/code&gt; from inside the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gmu-vpn&lt;/code&gt; directory and be connected.&lt;/p&gt;
+
+&lt;h3 id=&quot;sunnyd&quot;&gt;SunnyD&lt;/h3&gt;
+
+&lt;p&gt;But what if you want the bold refreshing taste of SystemD?&lt;/p&gt;
+
+&lt;p&gt;Well…&lt;/p&gt;
+
+&lt;p&gt;If we create the following file and place it in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/systemd/system&lt;/code&gt;, we’ll never have to connect to the vpn manually again!&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gmu-vpn.service&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;language-ini highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nn&quot;&gt;[Unit]&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;Description&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;GMU VPN&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;After&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;network.target&lt;/span&gt;
+
+&lt;span class=&quot;nn&quot;&gt;[Service]&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;root&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;ExecStart&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/bin/bash vpn.sh&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;WorkingDirectory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/USER/PATH/TO/gmu-vpn&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;exec&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;Restart&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;always&lt;/span&gt;
+
+&lt;span class=&quot;nn&quot;&gt;[Install]&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;WantedBy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;multi-user.target&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Next we load, enable, and start the service file with the following:&lt;/p&gt;
+
+&lt;p&gt;Rescan all the unit files: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo systemctl daemon-reload&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Has the new service start on boot: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo systemctl enable gmu-vpn&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Starts the new service: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo systemctl start gmu-vpn&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;That should be it, feel free to ask on our discord if you get stuck or have any questions!&lt;/p&gt;</content><author><name>Zach Osman</name></author><summary type="html">Easy GMU VPN Connection walkthrough.</summary></entry></feed>
