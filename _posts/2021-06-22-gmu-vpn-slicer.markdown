@@ -13,7 +13,7 @@ A common problem I found was that I'd want to access GMU resources (namely `zeus
 
 The solution that worked early in my time at GMU was to ssh jump into `zeus` from `mason.gmu.edu` (another student accessable linux machine), as `mason` was accessable from outside the VPN, whereas `zues` was not. 
 
-Somewhat recently `mason` followed `zues` and changed to no longer be publically accessable, and must be accessed from inside the GMU network, breaking the initial fix. 
+Somewhat recently `mason` followed `zeus` and changed to no longer be publically accessable, and must be accessed from inside the GMU network, breaking the initial fix. 
 
 As for how I use this personally, this runs 24/7 on my RaspberryPI, and I've setup my ssh config to sshjump through my RaspberryPI to ping any of the vse servers, meaning any of my computer on my network can ssh jump into VSE through my RaspberryPI. This has saved me quite a lot of time and pain over the years.
 
